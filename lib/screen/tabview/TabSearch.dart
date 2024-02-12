@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotify/spotify.dart';
 import 'package:spotifyxapp/api/SearchData.dart';
 import 'package:spotifyxapp/model/SpotifyItem.dart';
 import 'package:spotifyxapp/assets/GlobalString.dart';
+import 'package:spotifyxapp/screen/Albunlistview.dart';
+import 'package:spotifyxapp/screen/Trackdetailview.dart';
 import 'package:spotifyxapp/screen/tabview/TabLibrary.dart';
 
 class TabSearch extends StatefulWidget {
@@ -57,18 +60,27 @@ class _TabSearchState extends State<TabSearch> {
                 bool isInPlaylist = _isInPlaylist(item);
 
                 return ListTile(
+                  onTap: () async {
+                    AlbumSimple _albumsimple =
+                        await SearchData.searchAlbum(item.id);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Albunlistview(mapList: _albumsimple)));
+                  },
                   leading: Container(
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(item.images),
+                        image: NetworkImage(item.images[0].url.toString()),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  title: Text('Album Name: ${item.name}'),
-                  subtitle: Text('Artist Name: ${item.artists}'),
+                  title: Text('${item.type} name: ${item.name}'),
+                  // subtitle: Text('Artist Name: ${item.artists}'),
                   trailing: IconButton(
                     icon: Icon(
                       isInPlaylist ? Icons.star : Icons.star_outline,
@@ -116,7 +128,7 @@ class _TabSearchState extends State<TabSearch> {
     final SharedPreferences dataLocal = await SharedPreferences.getInstance();
     setState(() {
       GlobalString.StoreDBPlaylist = playlist;
-      dataLocal.setString('DBPlatlist', jsonEncode(playlist));
+      // dataLocal.setString('DBPlatlist', jsonEncode(playlist));
       // TabLibrary(dataParams: playlist);
       // storageDB.setItem("MyPlaylist", playlist);
     });

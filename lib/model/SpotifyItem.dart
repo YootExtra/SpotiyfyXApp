@@ -1,3 +1,5 @@
+import 'package:spotify/spotify.dart';
+
 class SpotifyItem {
   String id;
   String name;
@@ -5,11 +7,10 @@ class SpotifyItem {
   String type;
   String uri;
   String albumType;
-  String artists;
-  String availableMarkets;
-  String images;
+  List<ArtistSimple> artists;
+  List<Market> availableMarkets;
+  List<Image> images;
   String releaseDate;
-  String releaseDatePrecision;
 
   SpotifyItem({
     required this.id,
@@ -22,7 +23,6 @@ class SpotifyItem {
     required this.availableMarkets,
     required this.images,
     required this.releaseDate,
-    required this.releaseDatePrecision,
   });
 
   // factory SpotifyItem.fromJson(Map<String, dynamic> json) {

@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify/spotify.dart';
+import 'package:spotifyxapp/api/SearchData.dart';
 import 'package:spotifyxapp/assets/GlobalString.dart';
 import 'package:spotifyxapp/model/SpotifyItem.dart';
+import 'package:spotifyxapp/screen/Trackdetailview.dart';
 
 class Albunlistview extends StatefulWidget {
   final AlbumSimple mapList;
@@ -67,6 +69,15 @@ class _Albunlistview extends State<Albunlistview> {
                 bool isInPlaylist = _isInPlaylist(item);
                 List<Artist>? ListArtists = item.artists;
                 return ListTile(
+                  onTap: () async {
+                    Track _track =
+                        await SearchData.searchTrack(item.id.toString());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Trackdetailview(Currentrack: _track)));
+                  },
                   leading: Container(
                     width: 80,
                     height: 80,
@@ -102,7 +113,7 @@ class _Albunlistview extends State<Albunlistview> {
   bool _isInPlaylist(TrackSimple item) {
     try {
       // List<SpotifyItem> playlist = storageDB.getItem("MyPlaylist") ?? [];
-      List<TrackSimple> playlist = GlobalString.StoreDBTrackSimplelist;
+      List<SpotifyItem> playlist = GlobalString.StoreDBPlaylist;
       return playlist.any((element) => element.id == item.id);
     } catch (Ex) {
       return false;
@@ -111,18 +122,26 @@ class _Albunlistview extends State<Albunlistview> {
 
   Future<void> _addToPlaylist(TrackSimple item) async {
     // List<SpotifyItem> playlist = storageDB.getItem("MyPlaylist") ?? [];
-    List<TrackSimple> playlist = GlobalString.StoreDBTracklist;
+    List<SpotifyItem> playlist = GlobalString.StoreDBPlaylist;
     if (!_isInPlaylist(item)) {
-      playlist.add(item);
+      SpotifyItem _tempItem = SpotifyItem(
+          id: item.id.toString(),
+          name: item.name.toString(),
+          href: item.href.toString(),
+          type: item.type.toString(),
+          uri: item.uri.toString(),
+          albumType: "",
+          artists: item.artists ?? [],
+          availableMarkets: item.availableMarkets ?? [],
+          images: widget.mapList.images ?? [],
+          releaseDate: "");
+      playlist.add(_tempItem);
     } else {
       playlist.removeWhere((element) => element.id == item.id);
     }
     final SharedPreferences dataLocal = await SharedPreferences.getInstance();
     setState(() {
-      GlobalString.StoreDBTrackSimplelist = playlist;
-      dataLocal.setString('DBTracklist', jsonEncode(playlist));
-      // TabLibrary(dataParams: playlist);
-      // storageDB.setItem("MyPlaylist", playlist);
+      GlobalString.StoreDBPlaylist = playlist;
     });
   }
 }

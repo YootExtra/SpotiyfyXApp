@@ -99,7 +99,7 @@ class _Trackdetailview extends State<Trackdetailview> {
             ),
             Text('track name'),
             Text(
-              'track name: ${widget.Currentrack.name.toString()}',
+              widget.Currentrack.name.toString(),
               style: TextStyle(fontSize: 22.00),
             ),
             Text('artis name'),

@@ -71,12 +71,14 @@ class _TabLibraryState extends State<TabLibrary> {
                           margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(currentItem.images),
+                              image: NetworkImage(
+                                  currentItem.images[0].url.toString()),
                             ),
                           ),
                         ),
-                        title: Text('Album Name: ${currentItem.name}'),
-                        subtitle: Text('Artist Name: ${currentItem.artists}'),
+                        title: Text(
+                            '${currentItem.type} name: ${currentItem.name}'),
+                        // subtitle: Text('Artist Name: ${currentItem.artists}'),
                         trailing: IconButton(
                           onPressed: () {
                             _removeFromPlaylist(currentItem);
