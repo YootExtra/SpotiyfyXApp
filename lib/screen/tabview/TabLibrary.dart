@@ -4,9 +4,9 @@ import 'package:spotifyxapp/model/SpotifyItem.dart';
 import 'package:spotifyxapp/assets/GlobalString.dart';
 
 class TabLibrary extends StatefulWidget {
-  final List<SpotifyItem> dataParams; // Define the parameter
+  // final List<SpotifyItem> dataParams; // Define the parameter
 
-  const TabLibrary({Key? key, required this.dataParams}) : super(key: key);
+  // const TabLibrary({Key? key, required this.dataParams}) : super(key: key);
 
   @override
   _TabLibraryState createState() => _TabLibraryState();
@@ -36,7 +36,7 @@ class _TabLibraryState extends State<TabLibrary> {
     await storageDB.ready;
     setState(() {
       listData = List<SpotifyItem>.from(
-          widget.dataParams); // Initialize listData with dataParams
+          GlobalString.StoreDBPlaylist); // Initialize listData with dataParams
     });
   }
 

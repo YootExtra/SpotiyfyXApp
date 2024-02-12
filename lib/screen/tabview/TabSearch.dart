@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotifyxapp/api/SearchData.dart';
 import 'package:spotifyxapp/model/SpotifyItem.dart';
 import 'package:spotifyxapp/assets/GlobalString.dart';
+import 'package:spotifyxapp/screen/tabview/TabLibrary.dart';
 
 class TabSearch extends StatefulWidget {
   const TabSearch({Key? key}) : super(key: key);
@@ -102,7 +105,7 @@ class _TabSearchState extends State<TabSearch> {
     }
   }
 
-  void _addToPlaylist(SpotifyItem item) {
+  Future<void> _addToPlaylist(SpotifyItem item) async {
     // List<SpotifyItem> playlist = storageDB.getItem("MyPlaylist") ?? [];
     List<SpotifyItem> playlist = GlobalString.StoreDBPlaylist;
     if (!_isInPlaylist(item)) {
@@ -110,8 +113,11 @@ class _TabSearchState extends State<TabSearch> {
     } else {
       playlist.removeWhere((element) => element.id == item.id);
     }
+    final SharedPreferences dataLocal = await SharedPreferences.getInstance();
     setState(() {
       GlobalString.StoreDBPlaylist = playlist;
+      dataLocal.setString('DBPlatlist', jsonEncode(playlist));
+      // TabLibrary(dataParams: playlist);
       // storageDB.setItem("MyPlaylist", playlist);
     });
   }

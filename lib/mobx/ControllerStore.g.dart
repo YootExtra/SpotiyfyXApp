@@ -25,6 +25,22 @@ mixin _$ControllerStore on _ControllerStore, Store {
     });
   }
 
+  late final _$ListOfLibAtom =
+      Atom(name: '_ControllerStore.ListOfLib', context: context);
+
+  @override
+  List<SpotifyItem> get ListOfLib {
+    _$ListOfLibAtom.reportRead();
+    return super.ListOfLib;
+  }
+
+  @override
+  set ListOfLib(List<SpotifyItem> value) {
+    _$ListOfLibAtom.reportWrite(value, super.ListOfLib, () {
+      super.ListOfLib = value;
+    });
+  }
+
   late final _$_ControllerStoreActionController =
       ActionController(name: '_ControllerStore', context: context);
 
@@ -40,9 +56,21 @@ mixin _$ControllerStore on _ControllerStore, Store {
   }
 
   @override
+  void setItemList(SpotifyItem _item) {
+    final _$actionInfo = _$_ControllerStoreActionController.startAction(
+        name: '_ControllerStore.setItemList');
+    try {
+      return super.setItemList(_item);
+    } finally {
+      _$_ControllerStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-tokenapi: ${tokenapi}
+tokenapi: ${tokenapi},
+ListOfLib: ${ListOfLib}
     ''';
   }
 }
